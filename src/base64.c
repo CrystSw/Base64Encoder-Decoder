@@ -141,7 +141,7 @@ char *base64_decode(char *base64, int *data_size){
 	int bit_length;						//Base64文字列のビット長
 	int plain_length = 0;				//デコード後のサイズ
 	
-	char *plain = (char*)malloc(byte_length);		//結果格納用の領域
+	char *plain = (char*)malloc(byte_length*3/4+1);		//結果格納用の領域
 	int wbyte_index = 0;							//書き込むバイトのインデックス
 	
 	//'='削除
