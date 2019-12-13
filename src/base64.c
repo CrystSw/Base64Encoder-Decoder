@@ -13,11 +13,11 @@ void set_bitvalue(char*, int, char);
 
 /*-----base64-----*/
 char *base64_encode(char*, int);
-char invconv_table(char);
 char *base64_decode(char*, int*);
+inline char invconv_table(char);
 
 /*-----option-----*/
-long get_filesize(char*);
+inline long get_filesize(char*);
 
 /*
  *ビットインデックスが指すビットの値を取得する
@@ -28,11 +28,11 @@ long get_filesize(char*);
  *@return - ビット値
  */
 char get_bitvalue(char *plain, int bit_index){
-	int byte_index = bit_index / 8;		//文字配列中の対応するインデックスを求める
+	int byte_index = bit_index >> 3;		//文字配列中の対応するインデックスを求める
 	char tmp = 0x01;					//ビット評価用変数
 	
 	//ビット値を返す
-	return (plain[byte_index] & (tmp << (7 - bit_index % 8)) ? 1 : 0);
+	return (plain[byte_index] & (tmp << (7 - bit_index & 7)) ? 1 : 0);
 }
 
 /*
@@ -43,11 +43,11 @@ char get_bitvalue(char *plain, int bit_index){
  *@value value - 格納するビット値(0,1)
  */
 void set_bitvalue(char *plain, int bit_index, char value){
-	int byte_index = bit_index / 8;		//文字配列中の対応するインデックスを求める
+	int byte_index = bit_index >> 3;		//文字配列中の対応するインデックスを求める
 	char tmp = 0x01;					//ビット評価用変数
 	
 	//bit_indexに従って、任意の1ビットにのみ1を立てた変数を作成
-	tmp = tmp << (7 - bit_index % 8);
+	tmp = tmp << (7 - bit_index & 7);
 	
 	if(value == 0){
 		//NOT(tmp)と元の値とのANDを取ることで、任意の1ビットに0を立てる
