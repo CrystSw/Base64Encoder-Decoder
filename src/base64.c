@@ -32,7 +32,7 @@ char get_bitvalue(char *plain, int bit_index){
 	char tmp = 0x01;					//ビット評価用変数
 	
 	//ビット値を返す
-	return (plain[byte_index] & (tmp << (7 - bit_index & 7)) ? 1 : 0);
+	return (plain[byte_index] & (tmp << (7 - (bit_index & 7))) ? 1 : 0);
 }
 
 /*
@@ -47,7 +47,7 @@ void set_bitvalue(char *plain, int bit_index, char value){
 	char tmp = 0x01;					//ビット評価用変数
 	
 	//bit_indexに従って、任意の1ビットにのみ1を立てた変数を作成
-	tmp = tmp << (7 - bit_index & 7);
+	tmp = tmp << (7 - (bit_index & 7));
 	
 	if(value == 0){
 		//NOT(tmp)と元の値とのANDを取ることで、任意の1ビットに0を立てる
@@ -95,7 +95,7 @@ char *base64_encode(char *plain, int data_size){
 		base64[wbyte_index++] = conv_table[bit_data];
 	}
 	//Base64文字列長が4の倍数になるまで=をつける
-	while(wbyte_index % 4 != 0){
+	while(wbyte_index & 3 != 0){
 		base64[wbyte_index++] = '=';
 	}
 	//ヌル文字の格納
@@ -163,7 +163,7 @@ char *base64_decode(char *base64, int *data_size){
 	
 	//8ビットずつ切り出す
 	for(i = 0; i < bit_length; i++) {
-		if(i % 8 <= 1){
+		if((i & 7) <= 1){
 			i++;
 			continue;
 		}
